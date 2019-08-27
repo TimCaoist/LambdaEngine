@@ -18,7 +18,38 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
             var body = context.Body;
             var opreation = context.Variable.Value;
             var variable = context.Variables.ElementAt(context.Index + 1);
+            var skip = 1;
+            var subOpreation = string.Empty;
+            if (variable.Type != VariableType.Const)
+            {
+                if (variable.Type != VariableType.Operation)
+                {
+                    throw new ArgumentException("语法错误");
+                }
+
+                subOpreation = variable.Value;
+                variable = context.Variables.ElementAt(context.Index + 2);
+                skip = 2;
+                if (variable.Type != VariableType.Const)
+                {
+                    throw new ArgumentException("语法错误");
+                }
+            }
+
             Expression constantExpression = ExpressionBuilder.GetExpression(variable, context.ValuePairs, context.Datas);
+            switch (subOpreation)
+            {
+                case "-":
+                    constantExpression = Expression.Negate(constantExpression);
+                    break;
+                case "!":
+                    constantExpression = Expression.Not(constantExpression);
+                    break;
+                case "":
+                    break;
+                default:
+                    throw new ArgumentException("不支持该运算" + subOpreation);
+            }
 
             switch (opreation)
             {
@@ -52,14 +83,17 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                 case "=":
                     body = Assign(body, constantExpression);
                     break;
-                //case "!":
-                //    body = Negate(constantExpression);
-                //    break;
+                case "==":
+                    body = Equal(body, constantExpression);
+                    break;
+                    //case "!":
+                    //    body = Negate(constantExpression);
+                    //    break;
             }
 
             context.Expressions.Remove(context.Body);
             context.Expressions.Add(body);
-            return context.Index + 1;
+            return context.Index + skip;
         }
     }
 }

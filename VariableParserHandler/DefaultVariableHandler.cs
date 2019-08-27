@@ -13,6 +13,8 @@ namespace Tim.LambdaEngine.VariableParserHandler
 
         public override bool Default => true;
 
+        private const string Alat = "@";
+
         public override bool IsMatch(string token)
         {
             return false;
@@ -20,13 +22,27 @@ namespace Tim.LambdaEngine.VariableParserHandler
 
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {
-            var variable = new ConstVariable
-            {
-                Value = token.Flag
-            };
-
+            var variable = CreateVariable(token.Flag);
             variables.Add(variable);
             return i;
+        }
+
+        public static ConstVariable CreateVariable(string flag)
+        {
+            if (!flag.StartsWith(Alat))
+            {
+                var variable = new ConstVariable
+                {
+                    Value = flag
+                };
+
+                return variable;
+            }
+
+            return new ParamVariable
+            {
+                Value = flag
+            };
         }
     }
 }

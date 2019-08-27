@@ -27,7 +27,7 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
             }
 
             var variable = context.Variables.ElementAt(context.Index - 1);
-            if (variable.Type != VariableType.Const && variable.Type != VariableType.SwitchBranch)
+            if (variable.Type != VariableType.Const && !(variable is BranchVariable))
             {
                 return context.Index;
             }

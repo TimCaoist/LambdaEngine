@@ -11,5 +11,7 @@ namespace Tim.LambdaEngine.Models
         public ICollection<ConstVariable> ConstVariable = new List<ConstVariable>();
 
         public bool Default { get; set; }
+
+        public override VariableType Type => VariableType.SwitchBranch;
     }
 }

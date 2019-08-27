@@ -16,6 +16,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
             handles.Add(new DefaultVariableHandler());
             handles.Add(new IngoreVariableHandler());
             handles.Add(new OperationVariableHandler());
+            handles.Add(new IfVariableHandler());
             handles.Add(new SwitchVariableHandler());
             handles.Add(new TypeVariableHandler());
         }

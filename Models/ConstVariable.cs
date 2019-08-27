@@ -16,9 +16,8 @@ namespace Tim.LambdaEngine.Models
 
         public Type ValType { get; internal set; }
 
-        internal object GetValue(IDictionary<string, object> datas)
+        internal virtual object GetValue(IDictionary<string, object> datas)
         {
-            var val = Value;
             if (Value == "true" || Value == "false")
             {
                 return bool.Parse(Value);
@@ -34,12 +33,17 @@ namespace Tim.LambdaEngine.Models
                 return long.Parse(Value);
             }
 
-            if (Value.StartsWith("'") && Value.EndsWith("'"))
+            if (Value.StartsWith("'"))
             {
                 return char.Parse(Value.Replace("'", string.Empty));
             }
 
-            return Value;
+            if (Value.StartsWith("\""))
+            {
+                return Value.Replace("\"", string.Empty);
+            }
+
+            throw new ArgumentException(Value + "未能识别匹配的类型");
         }
 
         public static bool IsNumeric(string value)

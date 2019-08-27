@@ -26,7 +26,7 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
             ).ToArray();
 
             var defaultCase = caseVariables.FirstOrDefault(c => c.Default);
-            Expression defaultBody;
+            Expression defaultBody = null;
             if (defaultCase != null)
             {
                 ICollection<Expression> expressions = new List<Expression>();
@@ -35,11 +35,12 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                 defaultBody = Expression.Block(expressions);
             }
             else {
-                defaultBody = Expression.Constant(0);
+                var firstType = cases.First().Body.Type;
+                defaultBody = Expression.Block(firstType, Expression.Constant(Activator.CreateInstance(firstType)));
             }
 
             var param = ExpressionBuilder.GetExpression(switchBranch.Param, context.ValuePairs, context.Datas);
-            var switchExpression = Expression.Switch(param, defaultBody, cases);
+            SwitchExpression switchExpression = Expression.Switch(param, defaultBody, cases);
             context.Expressions.Add(switchExpression);
             context.ExcuteParams.Clear();
 

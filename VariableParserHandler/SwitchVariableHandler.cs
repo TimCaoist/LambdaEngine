@@ -7,7 +7,7 @@ using Tim.LambdaEngine.Models;
 
 namespace Tim.LambdaEngine.VariableParserHandler
 {
-    public class SwitchVariableHandler : BaseVariableHandler
+    public class SwitchVariableHandler : BranchVariableHandler
     {
         public override string[] Tokens => new string[] { "switch"};
 
@@ -47,30 +47,10 @@ namespace Tim.LambdaEngine.VariableParserHandler
             }
 
             var n = tokens.Count();
-
             ICollection<Token> subTokens = new List<Token>();
-            var c = 1;
-            for (var a = i + 5; a < n; a++)
-            {
-               if (tokens.ElementAt(a).Flag == "{")
-               {
-                    c++;
-               }
-               else if(tokens.ElementAt(a).Flag == "}")
-               {
-                    c--;
-                    if (c == 0)
-                    {
-                        subTokens.Add(tokens.ElementAt(a));
-                        break;
-                    }
-               }
-
-               subTokens.Add(tokens.ElementAt(a));
-            }
-
+            CollectionTokens(tokens, subTokens, i + 4, "{", "}");
             branchVariable.Variables = GetCaseVariables(subTokens);
-            return i + 4 + subTokens.Count();
+            return i + 3 + subTokens.Count();
         }
 
         private static IEnumerable<CaseVariable> GetCaseVariables(ICollection<Token> tokens)
@@ -116,10 +96,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 }
 
                 var nextFlag = tokens.ElementAt(a + 1).Flag;
-                lastCaseVariable.ConstVariable.Add(new ConstVariable
-                {
-                    Value = nextFlag
-                });
+                lastCaseVariable.ConstVariable.Add(DefaultVariableHandler.CreateVariable(nextFlag));
 
                 var nextSplitFlag = tokens.ElementAt(a + 2).Flag;
                 if (nextSplitFlag != ":")

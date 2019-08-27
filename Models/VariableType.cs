@@ -13,6 +13,8 @@
 
         Piece = 3,
 
-        SwitchBranch = 4
+        SwitchBranch = 4,
+
+        IfBranch = 5
     }
 }

@@ -16,6 +16,7 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
             handles.Add(new OperationBuilder());
             handles.Add(new ConstBuilder());
             handles.Add(new SwitchBuilder());
+            handles.Add(new IfBuilder());
         }
 
         public static BaseExpressionBuilder Create(Variable variable)

@@ -110,6 +110,7 @@ namespace Tim.LambdaEngine
                     case '}':
                     case '{':
                     case ':':
+                    case '!':
                         {
                             isSplit = true;
                             collectionStr(c);

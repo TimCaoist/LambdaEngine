@@ -46,6 +46,7 @@
     <Compile Include="ExpressionBuilderHandler\BaseExpressionBuilder.cs" />
     <Compile Include="ExpressionBuilderHandler\ConstBuilder.cs" />
     <Compile Include="ExpressionBuilderHandler\ExpressionBuilderFactoty.cs" />
+    <Compile Include="ExpressionBuilderHandler\IfBuilder.cs" />
     <Compile Include="ExpressionBuilderHandler\OperationBuilder.cs" />
     <Compile Include="ExpressionBuilderHandler\SwitchBuilder.cs" />
     <Compile Include="LambdaEnginer.cs" />
@@ -53,7 +54,9 @@
     <Compile Include="Models\CodePiece.cs" />
     <Compile Include="Models\ConstVariable.cs" />
     <Compile Include="Models\Context.cs" />
+    <Compile Include="Models\IfBranchVariable.cs" />
     <Compile Include="Models\OperationVarible.cs" />
+    <Compile Include="Models\ParamVariable.cs" />
     <Compile Include="Models\SwitchBranchVariable.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Variable.cs" />
@@ -63,7 +66,9 @@
     <Compile Include="VariableParserHandler\AssignVariableHandler.cs" />
     <Compile Include="VariableParserHandler\BaseVariableHandler.cs" />
     <Compile Include="Models\CaseVariable.cs" />
+    <Compile Include="VariableParserHandler\BranchVariableHandler.cs" />
     <Compile Include="VariableParserHandler\DefaultVariableHandler.cs" />
+    <Compile Include="VariableParserHandler\IfVariableHandler.cs" />
     <Compile Include="VariableParserHandler\IngoreVariableHandler.cs" />
     <Compile Include="VariableParserHandler\OperationVariableHandler.cs" />
     <Compile Include="VariableParserHandler\SwitchVariableHandler.cs" />

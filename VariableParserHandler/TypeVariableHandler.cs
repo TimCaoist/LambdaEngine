@@ -9,7 +9,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
 {
     public class TypeVariableHandler : BaseVariableHandler
     {
-        public override string[] Tokens => new string[] { "int", "Int32", "string", "String", "long", "Int64", "DateTime", "char" };
+        public override string[] Tokens => new string[] { "int", "Int32", "string", "String", "long", "Int64", "DateTime", "char", "bool" };
 
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {
@@ -42,6 +42,8 @@ namespace Tim.LambdaEngine.VariableParserHandler
                     return typeof(DateTime);
                 case "char":
                     return typeof(char);
+                case "bool":
+                    return typeof(bool);
             }
 
             return null;

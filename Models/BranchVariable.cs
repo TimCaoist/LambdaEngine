@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tim.LambdaEngine.Models
 {
-    public class BranchVariable : Variable
+    public abstract class BranchVariable : Variable
     {
-        public override VariableType Type => VariableType.SwitchBranch;
     }
 }
