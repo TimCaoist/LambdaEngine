@@ -15,35 +15,39 @@ namespace Tim.LambdaEngine.Models
         public bool IsParamer { get; set; }
 
         public Type ValType { get; internal set; }
+        public string Name { get; internal set; }
+        public bool NotSelf { get; internal set; }
+        public string Path { get; internal set; }
+        public IEnumerable<Variable> Params { get; internal set; }
 
         internal virtual object GetValue(IDictionary<string, object> datas)
         {
-            if (Value == "true" || Value == "false")
+            if (Name == "true" || Name == "false")
             {
-                return bool.Parse(Value);
+                return bool.Parse(Name);
             }
 
-            if (IsInt(Value))
+            if (IsInt(Name))
             {
-                return int.Parse(Value);
+                return int.Parse(Name);
             }
 
-            if (IsNumeric(Value))
+            if (IsNumeric(Name))
             {
-                return long.Parse(Value);
+                return long.Parse(Name);
             }
 
-            if (Value.StartsWith("'"))
+            if (Name.StartsWith("'"))
             {
-                return char.Parse(Value.Replace("'", string.Empty));
+                return char.Parse(Name.Replace("'", string.Empty));
             }
 
-            if (Value.StartsWith("\""))
+            if (Name.StartsWith("\""))
             {
-                return Value.Replace("\"", string.Empty);
+                return Name.Replace("\"", string.Empty);
             }
 
-            throw new ArgumentException(Value + "未能识别匹配的类型");
+            throw new ArgumentException(Name + "未能识别匹配的类型");
         }
 
         public static bool IsNumeric(string value)

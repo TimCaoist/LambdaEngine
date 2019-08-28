@@ -57,6 +57,7 @@
     <Compile Include="Models\IfBranchVariable.cs" />
     <Compile Include="Models\OperationVarible.cs" />
     <Compile Include="Models\ParamVariable.cs" />
+    <Compile Include="Models\Strings.cs" />
     <Compile Include="Models\SwitchBranchVariable.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Variable.cs" />

@@ -27,9 +27,9 @@ namespace Tim.LambdaEngine.VariableParserHandler
             variables.Add(branchVariable);
 
             var nextToken = tokens.ElementAt(i + 1);
-            if (nextToken.Flag != "(")
+            if (nextToken.Flag != Strings.StartFlag1)
             {
-                throw new ArgumentException("switch");
+                throw new ArgumentException(Tokens[0]);
             }
 
             var paramToken = tokens.ElementAt(i + 2);
@@ -41,14 +41,14 @@ namespace Tim.LambdaEngine.VariableParserHandler
             branchVariable.Param = variable;
 
             var nextCloseToken = tokens.ElementAt(i + 3);
-            if (nextCloseToken.Flag != ")")
+            if (nextCloseToken.Flag != Strings.EndFlag1)
             {
-                throw new ArgumentException("switch");
+                throw new ArgumentException(Tokens[0]);
             }
 
             var n = tokens.Count();
             ICollection<Token> subTokens = new List<Token>();
-            CollectionTokens(tokens, subTokens, i + 4, "{", "}");
+            CollectionTokens(tokens, subTokens, i + 4, Strings.StartFlag2, Strings.EndFlag2);
             branchVariable.Variables = GetCaseVariables(subTokens);
             return i + 3 + subTokens.Count();
         }
@@ -86,7 +86,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 if (flag == DefaultStr)
                 {
                     lastCaseVariable.Default = true;
-                    if (tokens.ElementAt(a + 1).Flag != ":")
+                    if (tokens.ElementAt(a + 1).Flag != Strings.Colon)
                     {
                         throw new ArgumentException("switch 语法错误");
                     }
@@ -96,10 +96,10 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 }
 
                 var nextFlag = tokens.ElementAt(a + 1).Flag;
-                lastCaseVariable.ConstVariable.Add(DefaultVariableHandler.CreateVariable(nextFlag));
-
-                var nextSplitFlag = tokens.ElementAt(a + 2).Flag;
-                if (nextSplitFlag != ":")
+                var result = DefaultVariableHandler.CreateVariable(tokens, nextFlag, a + 1);
+                lastCaseVariable.ConstVariable.Add(result.Item1);
+                var nextSplitFlag = tokens.ElementAt(result.Item2 + 1).Flag;
+                if (nextSplitFlag != Strings.Colon)
                 {
                     throw new ArgumentException("switch 语法错误");
                 }

@@ -22,27 +22,66 @@ namespace Tim.LambdaEngine.VariableParserHandler
 
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {
-            var variable = CreateVariable(token.Flag);
-            variables.Add(variable);
-            return i;
+            var variable = CreateVariable(tokens, token.Flag, i);
+            variables.Add(variable.Item1);
+            return variable.Item2;
         }
 
-        public static ConstVariable CreateVariable(string flag)
+        public static Tuple<ConstVariable, int> CreateVariable(IEnumerable<Token> tokens, string flag, int i)
         {
-            if (!flag.StartsWith(Alat))
+            ConstVariable variable = null;
+            var array = flag.Split(Strings.Split);
+            var key = array[0];
+            if (!key.StartsWith(Alat))
             {
-                var variable = new ConstVariable
+                variable = new ConstVariable
                 {
-                    Value = flag
+                    Value = flag,
+                    Name = key,
                 };
-
-                return variable;
+            }
+            else {
+                variable = new ParamVariable
+                {
+                    Value = flag,
+                    Name = key,
+                };
             }
 
-            return new ParamVariable
+            if (array.Length == 1)
             {
-                Value = flag
-            };
+                return Tuple.Create<ConstVariable, int>(variable, i);
+            }
+
+            variable.NotSelf = true;
+            var nextToken = tokens.ElementAt(i + 1);
+            variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
+            if (nextToken.Flag != Strings.StartFlag1)
+            {
+                return Tuple.Create<ConstVariable, int>(variable, i);
+            }
+
+            ICollection<Token> subTokens = new List<Token>();
+            BranchVariableHandler.CollectionTokens(tokens, subTokens, i + 1, Strings.StartFlag1, Strings.EndFlag1, true);
+            variable.Value = string.Concat(flag, Strings.StartFlag1, string.Join(string.Empty, subTokens.Select(t => t.Flag)), Strings.EndFlag1);
+            variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
+
+            var len = subTokens.Count();
+            ICollection<Variable> subVariables = new List<Variable>();
+            for (var si = 0; si < len; si++)
+            {
+                var token = subTokens.ElementAt(si);
+                var handler = VariableHandleFactory.Create(token.Flag);
+                si = handler.TryAddVariable(subTokens, token, subVariables, si);
+            }
+
+            if (subVariables.Any(s => s.Type != VariableType.Const))
+            {
+                throw new ArgumentException(string.Concat(variable.Path, "语法错误!"));
+            }
+
+            variable.Params = subVariables;
+            return Tuple.Create<ConstVariable, int>(variable, i);
         }
     }
 }

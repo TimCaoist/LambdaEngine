@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Tim.LambdaEngine.ExpressionBuilderHandler;
@@ -12,24 +13,85 @@ namespace Tim.LambdaEngine
 {
     public static class ExpressionBuilder
     {
-        public static Expression GetExpression(Variable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas)
+        public static Expression CallProperty(Expression expression, string propertyName)
         {
-            Expression expression;
-            if (!valuePairs.TryGetValue(variable.Value, out expression))
+            return Expression.PropertyOrField(expression, propertyName);
+        }
+
+        public static Expression CallMethod(ConstVariable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas, Expression expression, string methodName)
+        {
+            var varParams = variable.Params;
+            MethodInfo methodInfo = null;
+            List<Expression> paramExpressions = new List<Expression>();
+            Type[] types;
+            if (varParams != null)
             {
-                var cVariable = (ConstVariable)variable;
-                if (cVariable.IsParamer == false)
+                foreach (var param in varParams)
                 {
-                    expression = Expression.Constant(cVariable.GetValue(datas));
-                }
-                else {
-                    expression = Expression.Parameter(cVariable.ValType, variable.Value);
+                    paramExpressions.Add(GetExpression(param, valuePairs, datas));
                 }
 
-                valuePairs.Add(variable.Value, expression);
+                types = paramExpressions.Select(t => t.Type).ToArray();
+            }
+            else
+            {
+                types = new Type[] { };
+            }
+
+            methodInfo = expression.Type.GetMethod(methodName, types);
+            return Expression.Call(expression, methodInfo, paramExpressions.ToArray());
+        }
+
+        public static Expression BuildRealParam(ConstVariable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas, Expression expression, string path, int start = 0)
+        {
+            var index = path.IndexOfAny(new char[] { Strings.Split, char.Parse(Strings.StartFlag1) }, start);
+            string val = string.Empty;
+            if (index < 0)
+            {
+                val = path.Substring(start);
+                return CallProperty(expression, val);
+            }
+
+            val = path.Substring(start, index - start);
+            if (path[index] == Strings.Split)
+            {
+                expression = CallProperty(expression, val);
+            }
+            else {
+                return CallMethod(variable, valuePairs, datas, expression, val);
+            }
+
+            if (index > -1)
+            {
+                return BuildRealParam(variable, valuePairs, datas, expression, path, index + 1);
             }
 
             return expression;
+        }
+
+        public static Expression GetExpression(Variable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas)
+        {
+            Expression expression;
+            ConstVariable constVariable = (ConstVariable)variable;
+            if (!valuePairs.TryGetValue(constVariable.Name, out expression))
+            {
+                if (constVariable.IsParamer == false)
+                {
+                    expression = Expression.Constant(constVariable.GetValue(datas));
+                }
+                else {
+                    expression = Expression.Parameter(constVariable.ValType, constVariable.Name);
+                }
+
+                valuePairs.Add(constVariable.Name, expression);
+            }
+
+            if (!constVariable.NotSelf)
+            {
+                return expression;
+            }
+
+            return BuildRealParam(constVariable, valuePairs, datas, expression, constVariable.Path);
         }
 
         public static void BuildExpression(ICollection<Expression> expressions, IEnumerable<Variable> variables, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas)

@@ -14,9 +14,11 @@ namespace Tim.LambdaEngine.VariableParserHandler
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {
             Type type = GetType(token.Flag);
+            var flag = tokens.ElementAt(i + 1).Flag;
             var variable = new ConstVariable
             {
-                Value = tokens.ElementAt(i + 1).Flag,
+                Value = flag,
+                Name = flag,
                 IsParamer = true,
                 ValType = type
             };

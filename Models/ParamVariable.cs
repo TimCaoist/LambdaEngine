@@ -13,7 +13,7 @@ namespace Tim.LambdaEngine.Models
             get {
                 if (string.IsNullOrEmpty(key))
                 {
-                    key = Value.Substring(1);
+                    key = Name.Substring(1);
                 }
 
                 return key;
