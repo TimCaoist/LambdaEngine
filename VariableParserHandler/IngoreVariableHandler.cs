@@ -9,7 +9,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
 {
     public class IngoreVariableHandler : BaseVariableHandler
     {
-        public override string[] Tokens => new string[] { ";", "(", ")", "{" , "}", "," };
+        public override string[] Tokens => new string[] { ";", "(", ")", "{" , "}", Strings.ParamSplit};
 
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {

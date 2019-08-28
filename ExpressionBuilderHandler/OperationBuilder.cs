@@ -53,11 +53,21 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
 
             switch (opreation)
             {
+                case "!":
+                    body = Expression.Not(constantExpression);
+                    break;
                 case "+":
                     body = Add(body, constantExpression);
                     break;
                 case "-":
-                    body = Subtract(body, constantExpression);
+                    if (body != null)
+                    {
+                        body = Subtract(body, constantExpression);
+                    }
+                    else {
+                        body = Expression.Negate(constantExpression);
+                    }
+
                     break;
                 case "*":
                     body = Multiply(body, constantExpression);
@@ -85,6 +95,12 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                     break;
                 case "==":
                     body = Equal(body, constantExpression);
+                    break;
+                case "&&":
+                    body = AndAlso(body, constantExpression);
+                    break;
+                case "||":
+                    body = OrElse(body, constantExpression);
                     break;
                     //case "!":
                     //    body = Negate(constantExpression);

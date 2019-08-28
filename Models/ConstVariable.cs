@@ -18,7 +18,7 @@ namespace Tim.LambdaEngine.Models
         public string Name { get; internal set; }
         public bool NotSelf { get; internal set; }
         public string Path { get; internal set; }
-        public IEnumerable<Variable> Params { get; internal set; }
+        public IEnumerable<IEnumerable<Variable>> Params { get; internal set; }
 
         internal virtual object GetValue(IDictionary<string, object> datas)
         {

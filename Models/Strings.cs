@@ -19,5 +19,7 @@ namespace Tim.LambdaEngine.Models
         public const string Colon = ":";
 
         public const char Split = '.';
+
+        public const string ParamSplit = ",";
     }
 }

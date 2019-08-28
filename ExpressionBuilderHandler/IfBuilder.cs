@@ -56,10 +56,10 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
 
         private Tuple<BlockExpression, BlockExpression> BuildIfCondition(IfBranchVariable ifBranch, Context context)
         {
-            ICollection<Expression> paramExpressions = new List<Expression>();
+            IEnumerable<Expression> paramExpressions = Enumerable.Empty<Expression>();
             if (ifBranch.ParamVariables != null && ifBranch.ParamVariables.Any())
             {
-                ExpressionBuilder.BuildExpression(paramExpressions, ifBranch.ParamVariables, context.ValuePairs, context.Datas);
+                paramExpressions = Util.BuildExpression(ifBranch.ParamVariables, context.ValuePairs, context.Datas);
             }
             
             ICollection<Expression> expressions = new List<Expression>();

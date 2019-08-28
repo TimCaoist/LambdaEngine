@@ -28,7 +28,15 @@ namespace Tim.LambdaEngine
             {
                 foreach (var param in varParams)
                 {
-                    paramExpressions.Add(GetExpression(param, valuePairs, datas));
+                    var fisrtParam = param.First();
+                    if (param.Count() == 1)
+                    {
+                        paramExpressions.Add(GetExpression(fisrtParam, valuePairs, datas));
+                    }
+                    else {
+                        var expressions = Util.BuildExpression(param, valuePairs, datas);
+                        paramExpressions.Add(expressions.First());
+                    }
                 }
 
                 types = paramExpressions.Select(t => t.Type).ToArray();

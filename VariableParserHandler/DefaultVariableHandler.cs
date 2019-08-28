@@ -61,26 +61,10 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 return Tuple.Create<ConstVariable, int>(variable, i);
             }
 
-            ICollection<Token> subTokens = new List<Token>();
-            BranchVariableHandler.CollectionTokens(tokens, subTokens, i + 1, Strings.StartFlag1, Strings.EndFlag1, true);
-            variable.Value = string.Concat(flag, Strings.StartFlag1, string.Join(string.Empty, subTokens.Select(t => t.Flag)), Strings.EndFlag1);
+            var result = Util.GetParamVariables(tokens, flag, i);
+            variable.Params = result.Item1;
+            variable.Value = string.Concat(flag, Strings.StartFlag1, string.Join(string.Empty, result.Item2.Select(t => t.Flag)), Strings.EndFlag1);
             variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
-
-            var len = subTokens.Count();
-            ICollection<Variable> subVariables = new List<Variable>();
-            for (var si = 0; si < len; si++)
-            {
-                var token = subTokens.ElementAt(si);
-                var handler = VariableHandleFactory.Create(token.Flag);
-                si = handler.TryAddVariable(subTokens, token, subVariables, si);
-            }
-
-            if (subVariables.Any(s => s.Type != VariableType.Const))
-            {
-                throw new ArgumentException(string.Concat(variable.Path, "语法错误!"));
-            }
-
-            variable.Params = subVariables;
             return Tuple.Create<ConstVariable, int>(variable, i);
         }
     }

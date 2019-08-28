@@ -74,6 +74,7 @@
     <Compile Include="VariableParserHandler\OperationVariableHandler.cs" />
     <Compile Include="VariableParserHandler\SwitchVariableHandler.cs" />
     <Compile Include="VariableParserHandler\TypeVariableHandler.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="VariableParserHandler\VariableHandleFactory.cs" />
   </ItemGroup>
   <ItemGroup />

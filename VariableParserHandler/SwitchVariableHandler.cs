@@ -48,7 +48,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
 
             var n = tokens.Count();
             ICollection<Token> subTokens = new List<Token>();
-            CollectionTokens(tokens, subTokens, i + 4, Strings.StartFlag2, Strings.EndFlag2);
+            Util.CollectionTokens(tokens, subTokens, i + 4, Strings.StartFlag2, Strings.EndFlag2);
             branchVariable.Variables = GetCaseVariables(subTokens);
             return i + 3 + subTokens.Count();
         }
