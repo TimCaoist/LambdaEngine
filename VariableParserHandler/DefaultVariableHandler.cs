@@ -54,18 +54,8 @@ namespace Tim.LambdaEngine.VariableParserHandler
             }
 
             variable.NotSelf = true;
-            var nextToken = tokens.ElementAt(i + 1);
-            variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
-            if (nextToken.Flag != Strings.StartFlag1)
-            {
-                return Tuple.Create<ConstVariable, int>(variable, i);
-            }
-
-            var result = Util.GetParamVariables(tokens, flag, i);
-            variable.Params = result.Item1;
-            variable.Value = string.Concat(flag, Strings.StartFlag1, string.Join(string.Empty, result.Item2.Select(t => t.Flag)), Strings.EndFlag1);
-            variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
-            return Tuple.Create<ConstVariable, int>(variable, i);
+            Util.SetInvokeParam(tokens, variable, flag, i);
+            return Tuple.Create<ConstVariable, int>(variable, i + variable.ParamTokenCount);
         }
     }
 }

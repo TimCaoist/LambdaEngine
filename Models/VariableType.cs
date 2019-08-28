@@ -15,6 +15,8 @@
 
         SwitchBranch = 4,
 
-        IfBranch = 5
+        IfBranch = 5,
+
+        StaticMethod = 6
     }
 }

@@ -11,6 +11,27 @@ namespace Tim.LambdaEngine
 {
     public static class Util
     {
+        public static void SetInvokeParam(IEnumerable<Token> tokens, InvokeVariable variable, string flag, int i)
+        {
+            Token nextToken = null;
+            if (tokens.Count() > (i + 1))
+            {
+                nextToken = tokens.ElementAt(i + 1);
+            }
+
+            if (nextToken == null || nextToken.Flag != Strings.StartFlag1)
+            {
+                variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
+                return;
+            }
+
+            var result = GetParamVariables(tokens, flag, i);
+            variable.Params = result.Item1;
+            variable.Value = string.Concat(flag, Strings.StartFlag1, string.Join(string.Empty, result.Item2.Select(t => t.Flag)), Strings.EndFlag1);
+            variable.Path = variable.Value.Remove(0, variable.Name.Count() + 1);
+            variable.ParamTokenCount = result.Item2.Count() + 2;
+        }
+
         public static void CollectionTokens(IEnumerable<Token> tokens, ICollection<Token> subTokens, int i, string startFlag, string endFlag, bool ingoreFlag = false)
         {
             var n = tokens.Count();

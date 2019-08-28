@@ -13,12 +13,17 @@ namespace Tim.LambdaEngine
 {
     public static class ExpressionBuilder
     {
-        public static Expression CallProperty(Expression expression, string propertyName)
+        public static Expression CallProperty(InvokeVariable variable, Expression expression, string propertyName)
         {
-            return Expression.PropertyOrField(expression, propertyName);
+            if (variable.Type == VariableType.Const)
+            {
+                return Expression.PropertyOrField(expression, propertyName);
+            }
+
+            return Expression.Field(null, ((StaticMethodVariable)variable).InstanceType, propertyName);
         }
 
-        public static Expression CallMethod(ConstVariable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas, Expression expression, string methodName)
+        public static Expression CallMethod(InvokeVariable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas, Expression expression, string methodName)
         {
             var varParams = variable.Params;
             MethodInfo methodInfo = null;
@@ -46,24 +51,31 @@ namespace Tim.LambdaEngine
                 types = new Type[] { };
             }
 
-            methodInfo = expression.Type.GetMethod(methodName, types);
+            if (variable.Type == VariableType.Const)
+            {
+                methodInfo = expression.Type.GetMethod(methodName, types);
+            }
+            else {
+                methodInfo = ((StaticMethodVariable)variable).InstanceType.GetMethod(methodName, types);
+            }
+
             return Expression.Call(expression, methodInfo, paramExpressions.ToArray());
         }
 
-        public static Expression BuildRealParam(ConstVariable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas, Expression expression, string path, int start = 0)
+        public static Expression BuildRealParam(InvokeVariable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas, Expression expression, string path, int start = 0)
         {
             var index = path.IndexOfAny(new char[] { Strings.Split, char.Parse(Strings.StartFlag1) }, start);
             string val = string.Empty;
             if (index < 0)
             {
                 val = path.Substring(start);
-                return CallProperty(expression, val);
+                return CallProperty(variable, expression, val);
             }
 
             val = path.Substring(start, index - start);
             if (path[index] == Strings.Split)
             {
-                expression = CallProperty(expression, val);
+                expression = CallProperty(variable, expression, val);
             }
             else {
                 return CallMethod(variable, valuePairs, datas, expression, val);

@@ -21,5 +21,17 @@ namespace Tim.LambdaEngine.Models
         public const char Split = '.';
 
         public const string ParamSplit = ",";
+
+        public const string Int = "int";
+
+        internal static readonly string String = "string";
+
+        internal static readonly string Math = "Math";
+
+        internal static readonly string Long = "long";
+
+        internal static readonly string Bool = "bool";
+
+        internal static readonly string DateTime = "DateTime";
     }
 }

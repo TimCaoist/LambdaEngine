@@ -8,33 +8,33 @@ using Tim.LambdaEngine.Models;
 
 namespace Tim.LambdaEngine.ExpressionBuilderHandler
 {
-    public class ConstBuilder : BaseExpressionBuilder
+    public class StaticMethodBuilder : BaseExpressionBuilder
     {
-        protected override VariableType ValueType => VariableType.Const;
+        protected override VariableType ValueType => VariableType.StaticMethod;
 
         internal override int BuilderExpression(Context context)
         {
-            Expression constantExpression = ExpressionBuilder.GetExpression(context.Variable, context.ValuePairs, context.Datas);
+            var variable = (StaticMethodVariable)context.Variable;
+            Expression expression = ExpressionBuilder.BuildRealParam(variable, context.ValuePairs, context.Datas, null, variable.Path);
             if (context.Body == null)
             {
-                context.Expressions.Add(constantExpression);
+                context.Expressions.Add(expression);
             }
 
-            context.ExcuteParams.Add(constantExpression);
             if (context.Index == 0)
             {
                 return context.Index;
             }
 
-            var variable = context.Variables.ElementAt(context.Index - 1);
+            var prevVariable = context.Variables.ElementAt(context.Index - 1);
             if (variable.Type == VariableType.Operation)
             {
                 return context.Index;
             }
 
             context.ExcuteParams.Clear();
-            context.Expressions.Add(constantExpression);
-            context.ExcuteParams.Add(constantExpression);
+            context.Expressions.Add(expression);
+            context.ExcuteParams.Add(expression);
             return context.Index;
         }
     }

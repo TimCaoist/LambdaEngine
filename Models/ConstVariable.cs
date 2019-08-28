@@ -8,18 +8,15 @@ using System.Threading.Tasks;
 
 namespace Tim.LambdaEngine.Models
 {
-    public class ConstVariable : Variable
+    public class ConstVariable : InvokeVariable
     {
         public override VariableType Type => VariableType.Const;
 
         public bool IsParamer { get; set; }
 
         public Type ValType { get; internal set; }
-        public string Name { get; internal set; }
         public bool NotSelf { get; internal set; }
-        public string Path { get; internal set; }
-        public IEnumerable<IEnumerable<Variable>> Params { get; internal set; }
-
+      
         internal virtual object GetValue(IDictionary<string, object> datas)
         {
             if (Name == "true" || Name == "false")

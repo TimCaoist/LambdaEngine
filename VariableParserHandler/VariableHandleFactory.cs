@@ -12,6 +12,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
 
         static VariableHandleFactory()
         {
+            handles.Add(new StaticMethodVariableHandler());
             handles.Add(new AssignVariableHandler());
             handles.Add(new DefaultVariableHandler());
             handles.Add(new IngoreVariableHandler());
