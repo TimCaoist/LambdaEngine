@@ -20,7 +20,7 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
             var variable = context.Variables.ElementAt(context.Index + 1);
             var skip = 1;
             var subOpreation = string.Empty;
-            if (variable.Type != VariableType.Const)
+            if (variable.Type != VariableType.Const && variable.Type != VariableType.StaticMethod)
             {
                 if (variable.Type != VariableType.Operation)
                 {

@@ -91,6 +91,12 @@ namespace Tim.LambdaEngine
 
         public static Expression GetExpression(Variable variable, IDictionary<string, Expression> valuePairs, IDictionary<string, object> datas)
         {
+            if (variable.Type == VariableType.StaticMethod)
+            {
+                InvokeVariable invokeVariable = (InvokeVariable)variable;
+                return BuildRealParam(invokeVariable, valuePairs, datas, null, invokeVariable.Path);
+            }
+
             Expression expression;
             ConstVariable constVariable = (ConstVariable)variable;
             if (!valuePairs.TryGetValue(constVariable.Name, out expression))

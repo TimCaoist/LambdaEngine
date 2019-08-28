@@ -10,9 +10,9 @@ namespace Tim.LambdaEngine
     {
         public static object Eval(string expression, IDictionary<string, object> excuteParams = null)
         {
-            return 1;
+            var codePiece = CodeParser.Parser(expression);
+            var @delegate = ExpressionBuilder.Build(codePiece, excuteParams);
+            return @delegate.DynamicInvoke();
         }
-
-
     }
 }
