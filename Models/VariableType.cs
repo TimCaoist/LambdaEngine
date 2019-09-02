@@ -17,6 +17,8 @@
 
         IfBranch = 5,
 
-        StaticMethod = 6
+        StaticMethod = 6,
+
+        Assign = 7
     }
 }

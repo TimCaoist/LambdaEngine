@@ -19,7 +19,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 throw new ArgumentException("Variable类型错误！");
             }
 
-            variables.Add(new OperationVarible
+            variables.Add(new AssignVarible
             {
                 Value = token.Flag
             });

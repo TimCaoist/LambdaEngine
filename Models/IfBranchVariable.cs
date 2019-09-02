@@ -12,6 +12,8 @@ namespace Tim.LambdaEngine.Models
 
         public IEnumerable<Variable> ParamVariables { get; set; }
 
+        public int TokenCount { get; set; }
+
         public ICollection<IfBranchVariable> ElseIf { get; set; } = new List<IfBranchVariable>();
 
         public IfBranchVariable Else { get; set; }

@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Tim.LambdaEngine.ExpressionBuilderHandler;
 using Tim.LambdaEngine.Models;
-using static System.Linq.Expressions.Expression;
 
 namespace Tim.LambdaEngine
 {
@@ -143,13 +140,46 @@ namespace Tim.LambdaEngine
             }
         }
 
-        public static Delegate Build(CodePiece codePiece, IDictionary<string, object> datas)
+        public static Delegate Build(string eval, IDictionary<string, object> datas, IDictionary<string, Type> outParams = null)
+        {
+            var codePiece = CodeParser.Parser(eval);
+            return Build(codePiece, datas, outParams);
+        }
+
+        public static Delegate Build(CodePiece codePiece, IDictionary<string, object> datas, IDictionary<string, Type> outParams = null)
         {
             IDictionary<string, Expression> valuePairs = new Dictionary<string, Expression>();
+            if (outParams != null)
+            {
+                foreach (var outParam in outParams)
+                {
+                    valuePairs.Add(outParam.Key, Expression.Parameter(outParam.Value, outParam.Key));
+                }
+            }
+
             ICollection<Expression> expressions = new List<Expression>();
             BuildExpression(expressions, codePiece.Variables, valuePairs, datas);
-            var pEx = valuePairs.Values.Where(v => v is ParameterExpression).Cast<ParameterExpression>();
-            return Expression.Lambda(Expression.Block(pEx.ToArray(), expressions)).Compile();
+            ICollection<ParameterExpression> parameters = new List<ParameterExpression>();
+            ICollection<ParameterExpression> outParameters = new List<ParameterExpression>();
+            foreach (var parameter in valuePairs.Values)
+            {
+                ParameterExpression parameterExpression = parameter as ParameterExpression;
+                if (parameterExpression == null)
+                {
+                    continue;
+                }
+
+                if (outParams != null && outParams.ContainsKey(parameterExpression.Name))
+                {
+                    outParameters.Add(parameterExpression);
+                }
+                else {
+                    parameters.Add(parameterExpression);
+                }
+            }
+
+            var e = Expression.Lambda(Expression.Block(parameters, expressions), outParameters);
+            return e.Compile();
         }
     }
 }

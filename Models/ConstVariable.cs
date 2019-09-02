@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Tim.LambdaEngine.Models
 {
@@ -31,7 +27,7 @@ namespace Tim.LambdaEngine.Models
 
             if (IsNumeric(Name))
             {
-                return long.Parse(Name);
+                return float.Parse(Name);
             }
 
             if (Name.StartsWith("'"))

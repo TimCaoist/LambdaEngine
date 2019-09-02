@@ -88,6 +88,7 @@ namespace Tim.LambdaEngine
                         }
                     case '>':
                     case '<':
+                    case '!':
                         {
                             isSplit = true;
                             var nextC = code[index + 1];
@@ -110,7 +111,6 @@ namespace Tim.LambdaEngine
                     case '}':
                     case '{':
                     case ':':
-                    case '!':
                         {
                             isSplit = true;
                             collectionStr(c);

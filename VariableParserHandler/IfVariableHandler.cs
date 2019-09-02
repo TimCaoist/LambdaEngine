@@ -11,13 +11,15 @@ namespace Tim.LambdaEngine.VariableParserHandler
     {
         public override string[] Tokens => new string[] { "if", "else"};
 
+        private const int skipCount = 4;
+
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {
             if (token.Flag == Tokens[0])
             {
                 var branch = CreateIfBranchVariable(tokens, token, variables, i);
                 variables.Add(branch);
-                return i + 4 + branch.ParamVariables.Count() + branch.Variables.Count();
+                return i + skipCount + branch.TokenCount;
             }
 
             var lastVariable = variables.Last();
@@ -32,11 +34,11 @@ namespace Tim.LambdaEngine.VariableParserHandler
             {
                 var branch = CreateIfBranchVariable(tokens, token, variables, i + 1);
                 ifBranchVariable.ElseIf.Add(branch);
-                return i + 4 + branch.ParamVariables.Count() + branch.Variables.Count();
+                return i + skipCount + branch.TokenCount;
             }
 
             ifBranchVariable.Else = CreateElseBranchVariable(tokens, token, variables, i);
-            return i + 2 + ifBranchVariable.Else.Variables.Count();
+            return i + 2 + ifBranchVariable.TokenCount;
         }
 
         public IfBranchVariable CreateElseBranchVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
@@ -60,6 +62,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 a = handler.TryAddVariable(subTokens, subToken, bodyVariables, a);
             }
 
+            branchVariable.TokenCount = count;
             return branchVariable;
         }
 
@@ -74,6 +77,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
             Util.CollectionTokens(tokens, subTokens, i + 1, Strings.StartFlag1, Strings.EndFlag1, true);
             var count = subTokens.Count();
 
+            branchVariable.TokenCount = count;
             ICollection<Variable> paramVariables = new List<Variable>();
             branchVariable.ParamVariables = paramVariables;
 
@@ -98,6 +102,7 @@ namespace Tim.LambdaEngine.VariableParserHandler
                 a = handler.TryAddVariable(subTokens, subToken, bodyVariables , a);
             }
 
+            branchVariable.TokenCount += count;
             return branchVariable;
         }
     }

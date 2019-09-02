@@ -51,10 +51,18 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                     throw new ArgumentException("不支持该运算" + subOpreation);
             }
 
+            if (body.Type != constantExpression.Type)
+            {
+                body = Convert(body, constantExpression.Type);
+            }
+
             switch (opreation)
             {
                 case "!":
                     body = Expression.Not(constantExpression);
+                    break;
+                case "!=":
+                    body = Expression.NotEqual(body, constantExpression);
                     break;
                 case "+":
                     body = Add(body, constantExpression);
@@ -89,9 +97,6 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                     break;
                 case ">":
                     body = GreaterThan(body, constantExpression);
-                    break;
-                case "=":
-                    body = Assign(body, constantExpression);
                     break;
                 case "==":
                     body = Equal(body, constantExpression);
