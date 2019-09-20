@@ -19,6 +19,7 @@
 
         StaticMethod = 6,
 
-        Assign = 7
+        Assign = 7,
+        SpecialOperationVariable = 8
     }
 }

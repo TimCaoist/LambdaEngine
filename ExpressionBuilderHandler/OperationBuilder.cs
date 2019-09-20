@@ -101,12 +101,6 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                 case "==":
                     body = Equal(body, constantExpression);
                     break;
-                case "&&":
-                    body = AndAlso(body, constantExpression);
-                    break;
-                case "||":
-                    body = OrElse(body, constantExpression);
-                    break;
                     //case "!":
                     //    body = Negate(constantExpression);
                     //    break;

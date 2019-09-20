@@ -7,13 +7,13 @@ using Tim.LambdaEngine.Models;
 
 namespace Tim.LambdaEngine.VariableParserHandler
 {
-    public class OperationVariableHandler : BaseVariableHandler
+    public class SpecailOperationHandler : BaseVariableHandler
     {
-        public override string[] Tokens => new string[] { "+", "-", "*", "/", "%", "<=", ">=", "<", ">", "!", "==", "!=" };
+        public override string[] Tokens => new string[] { "&&", "||" };
 
         internal override int TryAddVariable(IEnumerable<Token> tokens, Token token, ICollection<Variable> variables, int i)
         {
-            variables.Add(new OperationVarible
+            variables.Add(new SpecailOperationVarible
             {
                 Value = token.Flag
             });

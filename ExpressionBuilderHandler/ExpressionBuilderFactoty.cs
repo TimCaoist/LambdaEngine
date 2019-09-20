@@ -13,12 +13,12 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
 
         static ExpressionBuilderFactoty()
         {
-            handles.Add(new OperationBuilder());
-            handles.Add(new ConstBuilder());
-            handles.Add(new SwitchBuilder());
-            handles.Add(new IfBuilder());
-            handles.Add(new StaticMethodBuilder());
-            handles.Add(new AssignBuilder());
+            var handlerTypes = TypeLoader.GetSubTypes(typeof(BaseExpressionBuilder));
+            foreach (var type in handlerTypes)
+            {
+                BaseExpressionBuilder variableHandler = (BaseExpressionBuilder)Activator.CreateInstance(type);
+                handles.Add(variableHandler);
+            }
         }
 
         public static BaseExpressionBuilder Create(Variable variable)

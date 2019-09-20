@@ -11,6 +11,7 @@ namespace Tim.LambdaEngine.Models
     {
         public int Index { get; internal set; }
         public Variable Variable { get; internal set; }
+
         public Expression Body {
             get {
                 if (!Expressions.Any())
