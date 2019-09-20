@@ -51,7 +51,7 @@ namespace Tim.LambdaEngine.ExpressionBuilderHandler
                     throw new ArgumentException("不支持该运算" + subOpreation);
             }
 
-            if (body.Type != constantExpression.Type)
+            if (body != null && body.Type != constantExpression.Type)
             {
                 body = Convert(body, constantExpression.Type);
             }
